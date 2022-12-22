@@ -1,7 +1,6 @@
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import truncateEthAddress from "truncate-eth-address";
-import ConnectToWalletConnect from "web3modal/dist/providers/connectors/walletconnect";
 import { Web3Button } from "@web3modal/react";
 
 interface Props {
@@ -26,7 +25,9 @@ function WalletConnect(): JSX.Element {
             src="./walletconnect.svg"
             className="bg-white rounded-full"
           ></img>
-          <p className="text-base font-bold">{truncateEthAddress(address)}</p>
+          <p className="text-base font-bold">
+            {address !== undefined ? truncateEthAddress(address) : "No Wallet"}
+          </p>
         </div>
       </button>
     );
