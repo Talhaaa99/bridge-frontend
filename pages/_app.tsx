@@ -6,19 +6,20 @@ import {
   walletConnectProvider,
 } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, goerli, WagmiConfig } from "wagmi";
 import { arbitrum, mainnet, polygon, bsc, bscTestnet } from "wagmi/chains";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const ethers = require("ethers");
-const chains = [arbitrum, mainnet, polygon, bsc, bscTestnet];
-
+const chains = [arbitrum, mainnet, polygon, bsc, bscTestnet, goerli];
 
 // Wagmi client
 const { provider } = configureChains(chains, [
   walletConnectProvider({ projectId: "c9014e13a272d698a8e1a0d7f21ab60d" }),
+  alchemyProvider({ apiKey: "CKVwniq4dHSY6_zuEjFjwmIukzzTJoYO" }),
 ]);
 const wagmiClient = createClient({
-  autoConnect: true,
+  autoConnect: false,
   connectors: modalConnectors({ appName: "web3Modal", chains }),
   provider,
 });
