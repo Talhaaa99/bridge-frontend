@@ -67,6 +67,10 @@ export default function Home({ networkData, tokenData }): JSX.Element {
     setIsModalOpenTo(false);
   };
 
+  const handleSameAddress = () => {
+    setRecievingAddress(address);
+  };
+
   const provider = useProvider();
   const contract = useContract({
     address: "0x9152efD02D5b31f86786804b31624a2F2e848e15",
@@ -101,11 +105,16 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                 <div
                   aria-hidden="false"
                   onClick={() => handleModalFrom()}
-                  className="flex w-full h-8 justify-between align-center"
+                  className="flex w-full h-8 justify-between align-center hover:cursor-pointer"
                 >
                   <div className="flex">
-                    <img src={currentFrom.logo} className="h-8 w-8 mr-4"></img>
-                    <p>{currentFrom.name.split(" ")[0]}</p>
+                    <img
+                      src={currentFrom.logo}
+                      className="h-8 w-8 mr-4 self-center"
+                    ></img>
+                    <p className="self-center">
+                      {currentFrom.name.split(" ")[0]}
+                    </p>
                   </div>
                   <ChevronDownIcon className="h-8 w-8 text-[#A0A5BA] justify-center" />
                 </div>
@@ -121,14 +130,16 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                           <p
                             key={item.id}
                             onClick={() => handleSelectFrom(item)}
-                            className="pt-2"
+                            className="pt-2 hover:cursor-pointer opacity-80 hover:opacity-100"
                           >
-                            <div className="flex">
+                            <div className="flex align-center">
                               <img
                                 src={item?.logo}
-                                className="h-8 w-8 mr-4"
+                                className="h-8 w-8 mr-4 self-center justify-center"
                               ></img>
-                              <p>{item.name?.split(" ")[0]}</p>
+                              <p className="self-center justify-center">
+                                {item.name?.split(" ")[0]}
+                              </p>
                             </div>
                           </p>
                         );
@@ -146,7 +157,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                 <div
                   aria-hidden="false"
                   onClick={() => handleModalToken()}
-                  className="flex w-full h-8 justify-between align-center"
+                  className="flex w-full h-8 justify-between align-center hover:cursor-pointer"
                 >
                   <div className="flex">
                     <img
@@ -169,7 +180,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                           <p
                             key={item.id}
                             onClick={() => handleSelectToken(item)}
-                            className="pt-2"
+                            className="pt-2 hover:cursor-pointer opacity-80 hover:opacity-100"
                           >
                             <div className="flex">
                               <img
@@ -193,7 +204,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
           <div
             aria-hidden="false"
             onClick={() => handleModalTo()}
-            className="flex w-[512px] h-[72px] justify-between align-center bg-[#F2F2F5] rounded-2xl p-4"
+            className="flex w-[512px] h-[72px] justify-between align-center bg-[#F2F2F5] rounded-2xl p-4 hover:cursor-pointer"
           >
             <div className="flex justify-center">
               <img
@@ -211,7 +222,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                   <p
                     key={item.id}
                     onClick={() => handleSelectTo(item)}
-                    className="pt-2"
+                    className="pt-2 hover:cursor-pointer opacity-80 hover:opacity-100"
                   >
                     <div className="flex">
                       <img src={item?.logo} className="h-8 w-8 mr-4"></img>
@@ -226,12 +237,23 @@ export default function Home({ networkData, tokenData }): JSX.Element {
           <h2 className="text-base font-normal tracking-wide text-[#02061D] mt-8">
             Recieving Address
           </h2>
-          <input
-            className="flex flex-row bg-[#f2f2f5] px-6 py-4 mt-2 mb-8 rounded-2xl w-full border-none placeholder:text-[#02061D] placeholder:text-opacity-30"
-            type="text"
-            placeholder="Binance Chain recieving wallet address"
-            onChange={(e) => setRecievingAddress(e.target.value)}
-          />
+          <div>
+            <input
+              className="flex flex-row bg-[#f2f2f5] px-6 py-4 mt-2 mb-8 rounded-2xl w-full border-none placeholder:text-[#02061D] placeholder:text-opacity-30"
+              type="text"
+              placeholder="Binance Chain recieving wallet address"
+              onChange={(e) => setRecievingAddress(e.target.value)}
+              value={recievingAddress}
+            ></input>
+            {recievingAddress === "" ? (
+              <button
+                className="text-base text-[#449DD1] absolute -mt-[72px] ml-[390px]"
+                onClick={() => handleSameAddress()}
+              >
+                Same address
+              </button>
+            ) : null}
+          </div>
           {console.log(recievingAddress)}
           <div>
             <div className="flex flex-row justify-between align-center">
@@ -242,19 +264,24 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                 Balance: 25,000 USDT
               </h2>
             </div>
-
-            <input
-              className="flex flex-row bg-[#f2f2f5] px-6 py-4 mt-2 mb-8 rounded-2xl w-full border-none placeholder:text-[#02061D] placeholder:text-opacity-30"
-              type="text"
-              placeholder="Enter amount from (0 - 100,000)"
-              onChange={(e) => setAmount(e.target.value)}
-            />
+            <div>
+              <input
+                className="flex flex-row bg-[#f2f2f5] px-6 py-4 mt-2 mb-8 rounded-2xl w-full border-none placeholder:text-[#02061D] placeholder:text-opacity-30"
+                type="text"
+                placeholder="Enter amount from (0 - 100,000)"
+                onChange={(e) => setAmount(e.target.value)}
+              />
+              <button className="text-base text-[#449DD1] absolute -mt-[72px] ml-[450px]">
+                MAX
+              </button>
+            </div>
             {console.log(amount)}
           </div>
           <h2 className="text-base font-medium tracking-wide text-[#02061D] mb-4">
             Summary
           </h2>
-          <div className="flex flex-row bg-[#D7263D]/10 p-4 mt-2 rounded-lg">
+          <div className="flex flex-row bg-[#D7263D]/10 p-4 mt-2 rounded-lg align-center justify-between">
+            <img src="./info-circle.png" className=" self-center mr-2"></img>
             <p className="text-[#D7263D]">
               To avoid your transaction from getting stuck we suggest using the
               max fee
@@ -267,7 +294,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                 <p className="font-bold">
                   {address !== undefined
                     ? truncateEthAddress(address)
-                    : "Please enter address"}
+                    : "Please connect Wallet"}
                 </p>
                 <img
                   src={currentFrom.logo}
@@ -279,7 +306,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
               <p className="">Destination:</p>
               <div className="flex flex-inline align-center gap-x-2 justify-center">
                 <p className="font-bold">
-                  {address !== undefined
+                  {recievingAddress !== undefined
                     ? truncateEthAddress(recievingAddress)
                     : "Please enter address"}
                 </p>
@@ -295,7 +322,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
             </div>
             <div className="flex flex-row text-base justify-between  align-center">
               <p className="">Fee:</p>
-              <p className="font-bold">2 USDC</p>
+              <p className="font-bold"> USDC</p>
             </div>
             <div className="flex flex-row text-base justify-between  align-center">
               <p className="">Total:</p>
