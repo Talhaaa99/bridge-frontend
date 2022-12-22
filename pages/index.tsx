@@ -107,7 +107,7 @@ export default function Home({ networkData, tokenData }: Props): JSX.Element {
 
   return (
     <div>
-      <div className="bg-[#F2F2F5] h-screen w-full">
+      <div className="bg-[#F2F2F5] h-full w-full">
         <header className="flex flex-row justify-between px-20 py-6">
           <h1 className="flex font-bold text-[32px]">Bridge</h1>
           <WalletConnect />
@@ -337,7 +337,6 @@ export default function Home({ networkData, tokenData }: Props): JSX.Element {
           </button>
         </div>
       </div>
-      <button>Native asset </button>
     </div>
   );
 }
