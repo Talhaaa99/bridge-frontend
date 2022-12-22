@@ -9,8 +9,6 @@ interface Props {
   label?: string;
 }
 
-type AddressType = "0x456d609DF071d620aAfAB68561a65A2A26077100";
-
 function WalletConnect(): JSX.Element {
   const { address, isConnected } = useAccount();
   const { connect } = useConnect({
