@@ -1,13 +1,34 @@
-import { Key, useEffect, useState } from "react";
+import {
+  Children,
+  Fragment,
+  Key,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useAccount, useContract, useContractRead, useProvider } from "wagmi";
 import WalletConnect from "../components/WalletConnect";
 import truncateEthAddress from "truncate-eth-address";
 import axios from "axios";
-import { ethers } from "ethers";
-import abi from "../components/abi.json";
 
-export default function Home({ networkData, tokenData }): JSX.Element {
+import abi from "../utils/abi.json";
+
+type Props = {
+  id: Key | null | undefined;
+  name: any;
+  logo: string | undefined;
+  chain_id: SetStateAction<string>;
+  networkData: any;
+  tokenData: any;
+  item: any;
+};
+
+interface InputProps {
+  children?: React.ReactNode;
+}
+
+export default function Home({ networkData, tokenData }: Props): JSX.Element {
   const { address } = useAccount();
   console.log(address);
   const [isModalOpenFrom, setIsModalOpenFrom] = useState(false);
@@ -49,26 +70,26 @@ export default function Home({ networkData, tokenData }): JSX.Element {
 
   console.log(networkData);
 
-  const handleSelectFrom = (item) => {
+  const handleSelectFrom = (item: Props) => {
     setCurrentFrom(item);
     console.log(selectedFrom);
     setChain(item.chain_id);
     setIsModalOpenFrom(false);
     setSelectedToken(currentToken[0]);
   };
-  const handleSelectToken = (item) => {
+  const handleSelectToken = (item: Props) => {
     setSelectedToken(item);
     console.log(selectedToken);
     setIsModalOpenToken(false);
   };
-  const handleSelectTo = (item) => {
+  const handleSelectTo = (item: Props) => {
     setSelectedTo(item);
     console.log(selectedTo);
     setIsModalOpenTo(false);
   };
 
   const handleSameAddress = () => {
-    setRecievingAddress(address);
+    if (address !== undefined) setRecievingAddress(address);
   };
 
   const provider = useProvider();
@@ -84,9 +105,8 @@ export default function Home({ networkData, tokenData }): JSX.Element {
     functionName: "getDirectswapAssetCount",
   });
 
-  console.log(`Data is ${data}`);
   return (
-    <>
+    <div>
       <div className="bg-[#F2F2F5] h-screen w-full">
         <header className="flex flex-row justify-between px-20 py-6">
           <h1 className="flex font-bold text-[32px]">Bridge</h1>
@@ -120,31 +140,25 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                 </div>
                 {isModalOpenFrom ? (
                   <div className="z-30 -ml-6 gap-y-2 pl-6 absolute h-[300px] bg-[#F2F2F5] overflow-y-scroll w-[270px] rounded-2xl">
-                    {networkData.map(
-                      (item: {
-                        id: Key | null | undefined;
-                        logo: string | undefined;
-                        name: string;
-                      }) => {
-                        return (
-                          <p
-                            key={item.id}
-                            onClick={() => handleSelectFrom(item)}
-                            className="pt-2 hover:cursor-pointer opacity-80 hover:opacity-100"
-                          >
-                            <div className="flex align-center">
-                              <img
-                                src={item?.logo}
-                                className="h-8 w-8 mr-4 self-center justify-center"
-                              ></img>
-                              <p className="self-center justify-center">
-                                {item.name?.split(" ")[0]}
-                              </p>
-                            </div>
-                          </p>
-                        );
-                      }
-                    )}
+                    {networkData.map((item: Props) => {
+                      return (
+                        <p
+                          key={item.id}
+                          onClick={() => handleSelectFrom(item)}
+                          className="pt-2 hover:cursor-pointer opacity-80 hover:opacity-100"
+                        >
+                          <div className="flex align-center">
+                            <img
+                              src={item?.logo}
+                              className="h-8 w-8 mr-4 self-center justify-center"
+                            ></img>
+                            <p className="self-center justify-center">
+                              {item.name?.split(" ")[0]}
+                            </p>
+                          </div>
+                        </p>
+                      );
+                    })}
                   </div>
                 ) : null}
               </div>
@@ -170,29 +184,20 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                 </div>
                 {isModalOpenToken ? (
                   <div className="z-30 -ml-6 gap-y-2 pl-6 absolute h-[300px] bg-[#F2F2F5] overflow-y-scroll w-[270px] rounded-2xl">
-                    {currentToken.map(
-                      (item: {
-                        id: Key | null | undefined;
-                        logo: string | undefined;
-                        name: string;
-                      }) => {
-                        return (
-                          <p
-                            key={item.id}
-                            onClick={() => handleSelectToken(item)}
-                            className="pt-2 hover:cursor-pointer opacity-80 hover:opacity-100"
-                          >
-                            <div className="flex">
-                              <img
-                                src={item.logo}
-                                className="h-8 w-8 mr-4"
-                              ></img>
-                              <p>{item.name.split(" ")[0]}</p>
-                            </div>
-                          </p>
-                        );
-                      }
-                    )}
+                    {currentToken.map((item: Props) => {
+                      return (
+                        <p
+                          key={item.id}
+                          onClick={() => handleSelectToken(item)}
+                          className="pt-2 hover:cursor-pointer opacity-80 hover:opacity-100"
+                        >
+                          <div className="flex">
+                            <img src={item.logo} className="h-8 w-8 mr-4"></img>
+                            <p>{item.name.split(" ")[0]}</p>
+                          </div>
+                        </p>
+                      );
+                    })}
                   </div>
                 ) : null}
               </div>
@@ -217,7 +222,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
           </div>
           {isModalOpenTo ? (
             <div className="z-30 gap-y-2 pl-6 absolute h-[300px] bg-[#F2F2F5] overflow-y-scroll w-[512px] rounded-2xl">
-              {networkData.map((item) => {
+              {networkData.map((item: Props) => {
                 return (
                   <p
                     key={item.id}
@@ -254,7 +259,6 @@ export default function Home({ networkData, tokenData }): JSX.Element {
               </button>
             ) : null}
           </div>
-          {console.log(recievingAddress)}
           <div>
             <div className="flex flex-row justify-between align-center">
               <h2 className="text-base font-normal tracking-wide text-[#02061D]">
@@ -275,7 +279,6 @@ export default function Home({ networkData, tokenData }): JSX.Element {
                 MAX
               </button>
             </div>
-            {console.log(amount)}
           </div>
           <h2 className="text-base font-medium tracking-wide text-[#02061D] mb-4">
             Summary
@@ -335,7 +338,7 @@ export default function Home({ networkData, tokenData }): JSX.Element {
         </div>
       </div>
       <button>Native asset </button>
-    </>
+    </div>
   );
 }
 
